@@ -27,28 +27,28 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       home: Scaffold(
-          body: const MyHomePage(title: 'Flutter Demo Home Page'),
-          bottomNavigationBar: SalomonBottomBar(
-            currentIndex: _selectedIndex,
-            onTap: (i) => setState(() => _selectedIndex = i),
-            items: [
-              SalomonBottomBarItem(
-                icon: const Icon(Icons.home),
-                title: const Text('主页'),
-                selectedColor: Colors.redAccent,
-              ),
-              SalomonBottomBarItem(
-                icon: const Icon(Icons.textsms),
-                title: const Text('消息'),
-                selectedColor: Colors.deepOrange,
-              ),
-              SalomonBottomBarItem(
-                icon: const Icon(Icons.person),
-                title: const Text('我的'),
-                selectedColor: Colors.orange,
-              ),
-            ],
-          ),
+        body: const MyHomePage(title: 'Flutter Demo Home Page'),
+        bottomNavigationBar: SalomonBottomBar(
+          currentIndex: _selectedIndex,
+          onTap: (i) => setState(() => _selectedIndex = i),
+          items: [
+            SalomonBottomBarItem(
+              icon: const Icon(Icons.home),
+              title: const Text('主页'),
+              selectedColor: Colors.redAccent,
+            ),
+            SalomonBottomBarItem(
+              icon: const Icon(Icons.textsms),
+              title: const Text('消息'),
+              selectedColor: Colors.deepOrange,
+            ),
+            SalomonBottomBarItem(
+              icon: const Icon(Icons.person),
+              title: const Text('我的'),
+              selectedColor: Colors.orange,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -64,7 +64,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     return DraggableHome(
@@ -93,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
       stretchMaxHeight: 0.86,
     );
   }
+
   Row headerBottomBarWidget() {
     return const Row(
       mainAxisSize: MainAxisSize.max,
@@ -124,18 +124,52 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ListView listView() {
     return ListView.builder(
-      padding: const EdgeInsets.only(top: 0, left:10, right: 10),
+      padding: const EdgeInsets.only(top: 0, left: 10, right: 10),
       physics: const NeverScrollableScrollPhysics(),
       itemCount: 1,
       shrinkWrap: true,
-      itemBuilder: (context, index) => Card(
-        color: Colors.white70,
-        child: ListTile(
-          leading: CircleAvatar(
-            child: Text("$index"),
-          ),
-          title: const Text("Title"),
-          subtitle: const Text("Subtitle"),
+      itemBuilder: (context, index) => Container(
+        width: 100,
+        height: 100,
+        margin: const EdgeInsets.only(top: 10, left: 5, right: 5),
+        child: Stack(
+          children: [
+            Positioned(
+                top: 0,
+                left: 0,
+                child: MaterialButton(
+                  minWidth: 325,
+                  height: 100,
+                  color: Colors.green,
+                  onPressed: () {},
+                  child: const SizedBox(
+                    width: 325,
+                    height: 100,
+                    child: Text(
+                      '我要上门回收',
+                      style: TextStyle(
+                        color: Colors.black26,
+                        fontSize: 35,
+                      ),
+                    ),
+                  ),
+                )),
+            const Positioned(
+              bottom: 0,
+              right: 0,
+              child: Icon(
+                Icons.recycling,
+                color: Colors.lightGreenAccent,
+                size: 100,
+                shadows: [
+                  Shadow(
+                    color: Colors.green,
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                  ),],
+              ),
+            ),
+          ],
         ),
       ),
     );
