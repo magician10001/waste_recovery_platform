@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:draggable_home/draggable_home.dart';
 import 'camera_preview.dart';
+import 'map.dart';
+import 'CreateRoutes.dart';
+import 'chatPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,13 +24,21 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       home: Scaffold(
-        body: const MyHomePage(title: 'Flutter Demo Home Page'),
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: [
+            const MyHomePage(title: 'Flutter Demo Home Page'),
+            ChatScreen(),
+             MapPage(),
+          ],
+        ),
         bottomNavigationBar: SalomonBottomBar(
           currentIndex: _selectedIndex,
           onTap: (i) => setState(() => _selectedIndex = i),
@@ -124,54 +135,74 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ListView listView() {
     return ListView.builder(
-      padding: const EdgeInsets.only(top: 0, left: 10, right: 10),
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: 1,
-      shrinkWrap: true,
-      itemBuilder: (context, index) => Container(
-        width: 100,
-        height: 100,
-        margin: const EdgeInsets.only(top: 10, left: 5, right: 5),
-        child: Stack(
-          children: [
-            Positioned(
-                top: 0,
-                left: 0,
-                child: MaterialButton(
-                  minWidth: 325,
-                  height: 100,
-                  color: Colors.green,
-                  onPressed: () {},
-                  child: const SizedBox(
-                    width: 325,
-                    height: 100,
-                    child: Text(
-                      '我要上门回收',
-                      style: TextStyle(
-                        color: Colors.black26,
-                        fontSize: 35,
+        padding: const EdgeInsets.only(top: 0, left: 10, right: 10),
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 1,
+        shrinkWrap: true,
+        itemBuilder: (context, index) => Container(
+              width: double.infinity, // 让容器宽度自适应父级宽度
+              height: 100,
+              margin: const EdgeInsets.only(top: 10, left: 5, right: 5),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Material(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(10),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(context, createRoute_bottom());
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: const Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.start, // 将文字居左显示
+                            children: [
+                              SizedBox(width: 15), // 添加文字与按钮左边框的距离
+                              Text(
+                                '我要上门回收',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 35,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                )),
-            const Positioned(
-              bottom: 0,
-              right: 0,
-              child: Icon(
-                Icons.recycling,
-                color: Colors.lightGreenAccent,
-                size: 100,
-                shadows: [
-                  Shadow(
-                    color: Colors.green,
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                  ),],
+                  const Positioned(
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    child: Icon(
+                      Icons.recycling,
+                      color: Colors.lightGreenAccent,
+                      size: 100,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black26,
+                          offset: Offset(0, 1),
+                          blurRadius: 5,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: Material(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(context, createRoute_bottom());
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ),
-    );
+            ));
   }
 }
