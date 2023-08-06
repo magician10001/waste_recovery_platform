@@ -34,6 +34,16 @@ dependencies:
   cupertino_icons: ^1.0.2
   salomon_bottom_bar: ^3.3.2
   draggable_home: ^1.0.2
+  amap_flutter_location: ^3.0.0
+  permission_handler: ^10.4.3
+  amap_flutter_map: ^3.0.0
+  amap_flutter_base: ^3.0.0
+  image_picker: ^1.0.2
+  camera:
+  path_provider:
+  path:
+  provider:
+  image_cropper:
 
 dev_dependencies:
   flutter_test:
