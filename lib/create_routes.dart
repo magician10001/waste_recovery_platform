@@ -1,13 +1,10 @@
-// ignore_for_file: prefer_const_constructors, file_names
-
 import 'package:flutter/material.dart';
-import 'map.dart';
-// ignore: unused_import
-import 'consts.dart';
+import 'location.dart';
+import 'map_page.dart';
 
 Route createRouteBottom() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => MapPage(),
+    pageBuilder: (context, animation, secondaryAnimation) => const MapPage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = const Offset(0.0, 1.0);
       var end = Offset.zero;

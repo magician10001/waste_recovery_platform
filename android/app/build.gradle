@@ -53,13 +53,26 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         minSdkVersion 21
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86","x86_64"
+        }
+    }
+
+    signingConfigs {
+        config {
+            storeFile file('../../key.jks') //KeyStore路径
+            keyAlias "key" // 别名
+            storePassword "android" //密码
+            keyPassword "android" // 密码
+        }
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
 }
@@ -71,5 +84,12 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.amap.api:location:5.2.0'
-    implementation 'com.amap.api:3dmap:5.0.0'
+    implementation 'com.amap.api:search:5.0.0'
+    implementation 'com.amap.api:3dmap:8.1.0'
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
 }
