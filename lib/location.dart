@@ -57,7 +57,7 @@ class _LocationPageState extends State<LocationPage> {
     _locationListener = _locationPlugin
         .onLocationChanged()
         .listen((Map<String, Object> result) {
-      print(result);
+      //print(result);
 
       setState(() {
         _latitude = result["latitude"].toString();
@@ -90,9 +90,9 @@ class _LocationPageState extends State<LocationPage> {
     // 申请权限
     bool hasLocationPermission = await requestLocationPermission();
     if (hasLocationPermission) {
-      print("定位权限申请通过");
+      //print("定位权限申请通过");
     } else {
-      print("定位权限申请不通过");
+      //print("定位权限申请不通过");
     }
   }
 
@@ -122,12 +122,12 @@ class _LocationPageState extends State<LocationPage> {
     await _locationPlugin.getSystemAccuracyAuthorization();
     if (currentAccuracyAuthorization ==
         AMapAccuracyAuthorization.AMapAccuracyAuthorizationFullAccuracy) {
-      print("精确定位类型");
+      //print("精确定位类型");
     } else if (currentAccuracyAuthorization ==
         AMapAccuracyAuthorization.AMapAccuracyAuthorizationReducedAccuracy) {
-      print("模糊定位类型");
+      //print("模糊定位类型");
     } else {
-      print("未知定位类型");
+      //print("未知定位类型");
     }
   }
 
@@ -209,7 +209,7 @@ class _LocationPageState extends State<LocationPage> {
             Text('街道：$street'),
             Text('邮编：$adCode'),
             Text('详细地址：$address'),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               child: const Text('开始定位'),
               onPressed: () {

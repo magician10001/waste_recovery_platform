@@ -6,6 +6,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/status.dart' as status;
 
 class TakePictureScreen extends StatefulWidget {
   final CameraDescription camera;
@@ -146,7 +149,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   Future<void> _takePicture(BuildContext context) async {
-    //拍照
+    ///拍照
     try {
       await _initializeControllerFuture;
       var image = await _controller.takePicture();
@@ -162,7 +165,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   Future<void> _openGallery(BuildContext context) async {
-    //打开相册
+    ///打开相册
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
 
@@ -235,8 +238,53 @@ class DisplayPictureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Display the Picture')),
-      body: Image.file(File(imagePath)),
+      appBar: AppBar(title: const Text('上传照片')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+                constraints: const BoxConstraints(
+                  maxHeight: 600,
+                ),
+                child: Image.file(
+                  File(imagePath),
+                  fit: BoxFit.contain,
+                )),
+            const SizedBox(height: 16.0), // 添加一些间距
+            ElevatedButton(
+              onPressed: () {
+                submitImage();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xfc77be87), // 背景颜色
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0), // 圆角矩形
+                ),
+                elevation: 0, // 取消阴影
+                fixedSize: const Size(175.0, 50.0),
+              ),
+              child: const Text(
+                  '上传',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    color: Color(0xba0d3600),
+                  ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  void submitImage() {
+    final channel = IOWebSocketChannel.connect(
+        Uri.parse('ws://127.0.0.1:12345')
+    ); // 连接到服务器
+    channel.sink.add('hello');
+    channel.stream.listen((event) {
+      log(event);
+    });
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'location.dart';
 import 'map_page.dart';
 
 Route createRouteBottom() {

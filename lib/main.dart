@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
-import 'config.dart';
 import 'package:camera/camera.dart';
 import 'package:provider/provider.dart';
 
-//外部组件
+///外部组件
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
-//内部文件
-import 'map.dart';
+///内部文件
 import 'chat_page.dart';
 import 'home_page.dart';
 
 Future<void> main() async {
-// Ensure that plugin services are initialized so that `availableCameras()`
-// can be called before `runApp()`
+/// Ensure that plugin services are initialized so that `availableCameras()` can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     ChangeNotifierProvider(
         create: (_) => CameraProvider(),
-        child: MyApp()),
+        child: const MyApp()),
   );
 }
 
@@ -71,7 +68,7 @@ class _MyAppState extends State<MyApp> {
         body: IndexedStack(                                                     //IndexedStack组件，用于切换页面
           index: _selectedIndex,
           children: [
-            const AMapPage(iosKey, androidKey),
+            const ProfilePage(),
             HomePage(title: "Demo", cameras: _cameras),
             const ProfilePage(),
           ],

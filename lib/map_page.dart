@@ -65,16 +65,16 @@ class _MapPageState extends State<MapPage> {
     permissionStatus = status;
     switch (status) {
       case PermissionStatus.denied:
-        print("拒绝");
+        //print("拒绝");
         break;
       case PermissionStatus.granted:
         requestLocation();
         break;
       case PermissionStatus.limited:
-        print("限制");
+        //print("限制");
         break;
       default:
-        print("其他状态");
+        //print("其他状态");
         requestLocation();
         break;
     }
@@ -85,7 +85,6 @@ class _MapPageState extends State<MapPage> {
     location = AMapFlutterLocation()
       ..setLocationOption(AMapLocationOption())
       ..onLocationChanged().listen((event) {
-        print(event);
         double? latitude = double.tryParse(event['latitude'].toString());
         double? longitude = double.tryParse(event['longitude'].toString());
         markerLatitude = latitude.toString();
@@ -96,7 +95,7 @@ class _MapPageState extends State<MapPage> {
           setState(() {
             currentLocation = CameraPosition(
               target: LatLng(latitude, longitude),
-              zoom: 10,
+              zoom: 13,
             );
           });
         }
@@ -105,15 +104,15 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _onMapPoiTouched(AMapPoi poi) async {
-    if (null == poi) {
-      return;
-    }
+    // if (null == poi) {
+    //   return;
+    // }
     print('_onMapPoiTouched===> ${poi.toJson()}');
     var xx = poi.toJson();
     print(xx['latLng']);
     markerLatitude = xx['latLng'][1];
     markerLongitude = xx['latLng'][0];
-    print(markerLatitude);
+    //print(markerLatitude);
     print(markerLatitude);
     setState(() {
       _addMarker(poi.latLng!);
@@ -149,7 +148,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   /// 改变中心点
-  void _changeCameraPosition(LatLng markPostion, {double zoom = 13}) {
+  void _changeCameraPosition(LatLng markPostion, {double zoom = 15}) {
     mapController?.moveCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -222,7 +221,7 @@ class _MapPageState extends State<MapPage> {
                           '周边信息',
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -392,8 +391,8 @@ class _MapPageState extends State<MapPage> {
 
   /// 获取周边数据
   Future<void> _getPoisData() async {
-    var response = await Dio().get(
-        'https://restapi.amap.com/v3/place/around?key=${ConstConfig.webKey}&location=$markerLatitude,$markerLongitude&keywords=&types=&radius=1000&offset=20&page=1&extensions=base');
+    var response = await Dio().get('https://restapi.amap.com/v3/place/around?key=${ConstConfig.webKey}&location=$markerLatitude,$markerLongitude&keywords=&types=&radius=1000&offset=20&page=1&extensions=base');
+    print(response);
     setState(() {
       poisData = response.data['pois'];
     });

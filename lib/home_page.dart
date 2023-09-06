@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:developer';
 import 'package:draggable_home/draggable_home.dart';
-import 'camera_preview.dart';
+import 'camera_page.dart';
 import 'create_routes.dart';
 
 class HomePage extends StatefulWidget {
@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
             "下拉拍照",
             style: Theme.of(context)
                 .textTheme
-                .headline6!
+                .titleLarge!
                 .copyWith(color: Colors.white),
           ),
           RichText(
