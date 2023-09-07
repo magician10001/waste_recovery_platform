@@ -27,3 +27,9 @@ class ConstConfig {
 const String androidKey = "0888b5e8d3804534b3c4e5741bfbb029";
 const String iosKey = "d2555847188002d350dffb528777bfc3";
 const String webKey = "1fdc832712135264c88bac2a9619e9e0";
+
+List<Map<String, dynamic>> customPoisData = [
+  {"address":"红凌路西150米","distance":"0","pname":"辽宁省","cityname":"大连市","photos":[],"typecode":"050100","adname":"甘井子区","name":"废铁","weight":"1.5kg","location":"121.522332,38.882768","tel":"0411-84708375","id":"00001", "price":"9", "username":"atlas"},
+  {"address":"大连理工大学29舍","distance":"0","pname":"辽宁省","cityname":"大连市","photos":[],"typecode":"050100","adname":"甘井子区","name":"塑料瓶","weight":"2kg","location":"121.523000,38.882750","tel":"0411-84708375","id":"00002", "price":"2.5", "username":"plato"},
+  // 添加更多自定义数据项
+];

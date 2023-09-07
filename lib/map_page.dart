@@ -1,16 +1,11 @@
-import 'dart:io';
-
 import 'package:amap_flutter_base/amap_flutter_base.dart';
 import 'package:amap_flutter_location/amap_flutter_location.dart';
 import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:amap_flutter_map/amap_flutter_map.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'config.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -95,7 +90,7 @@ class _MapPageState extends State<MapPage> {
           setState(() {
             currentLocation = CameraPosition(
               target: LatLng(latitude, longitude),
-              zoom: 13,
+              zoom: 15,
             );
           });
         }
@@ -112,8 +107,6 @@ class _MapPageState extends State<MapPage> {
     print(xx['latLng']);
     markerLatitude = xx['latLng'][1];
     markerLongitude = xx['latLng'][0];
-    //print(markerLatitude);
-    print(markerLatitude);
     setState(() {
       _addMarker(poi.latLng!);
     });
@@ -124,7 +117,7 @@ class _MapPageState extends State<MapPage> {
   final Map<String, Marker> _markers = <String, Marker>{};
   //添加一个marker
   void _addMarker(LatLng markPostion) async {
-    _removeAll();
+    //_removeAll();
     final Marker marker = Marker(
       position: markPostion,
       //使用默认hue的方式设置Marker的图标
@@ -138,17 +131,31 @@ class _MapPageState extends State<MapPage> {
     _changeCameraPosition(markPostion);
   }
 
-  /// 清除marker
-  void _removeAll() {
-    if (_markers.isNotEmpty) {
-      setState(() {
-        _markers.clear();
-      });
-    }
+  void _addMarker_noCameraChange(LatLng markPostion) async {
+    //_removeAll();
+    final Marker marker = Marker(
+      position: markPostion,
+      //使用默认hue的方式设置Marker的图标
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+    );
+    //调用setState触发AMapWidget的更新，从而完成marker的添加
+    setState(() {
+      //将新的marker添加到map里
+      _markers[marker.id] = marker;
+    });
   }
 
+  // /// 清除marker
+  // void _removeAll() {
+  //   if (_markers.isNotEmpty) {
+  //     setState(() {
+  //       _markers.clear();
+  //     });
+  //   }
+  // }
+
   /// 改变中心点
-  void _changeCameraPosition(LatLng markPostion, {double zoom = 15}) {
+  void _changeCameraPosition(LatLng markPostion, {double zoom = 18}) {
     mapController?.moveCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -229,10 +236,12 @@ class _MapPageState extends State<MapPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                         child: ElevatedButton(
-                          onPressed: _getPoisData,
+                          onPressed: _getPoisData_init,
                           style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white, backgroundColor: Colors.lightBlue,
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            foregroundColor: Colors.white,
+                            backgroundColor: const Color(0xfc77be87),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
@@ -250,7 +259,6 @@ class _MapPageState extends State<MapPage> {
                           ),
                         ),
                       )
-
                     ],
                   ),
                 ),
@@ -270,7 +278,7 @@ class _MapPageState extends State<MapPage> {
         onClose: () => print('DIAL CLOSED'), //关闭回调
         tooltip: 'Speed Dial', //长按提示文字
         heroTag: 'speed-dial-hero-tag', //hero标记
-        backgroundColor: Colors.blue, //按钮背景色
+        backgroundColor: const Color(0xfc77be87), //按钮背景色
         foregroundColor: Colors.white, //按钮前景色/文字色
         elevation: 8.0, //阴影
         shape: const CircleBorder(), //shape修饰
@@ -330,7 +338,7 @@ class _MapPageState extends State<MapPage> {
     return Column(
       children: poisData.map((value) {
         return ListTile(
-          title: Text(value['name']),
+          title: Text('${value['name']}'),
           subtitle: Text(
               '${value['pname']}${value['cityname']}${value['adname']}${value['address']}'),
           onTap: () async {
@@ -344,45 +352,44 @@ class _MapPageState extends State<MapPage> {
             _changeCameraPosition(LatLng(l1, l2));
           },
           onLongPress: () {
-            showCupertinoDialog(
-                context: context,
-                builder: (context) {
-                  return CupertinoAlertDialog(
-                    title: const Text('提示'),
-                    content: const Text('是否进入高德地图导航'),
-                    actions: <Widget>[
-                      CupertinoDialogAction(
-                        child: const Text('取消'),
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Text('物品详情', style: TextStyle(fontSize: 20)),
+                      const SizedBox(height: 10),
+                      Text('类别: ${value['name']}'),
+                      Text('数量: ${value['weight']}'),
+                      Text('价格: ${value['price']}'),
+                      Text('联系人: ${value['username']}'),
+                      Text('详细地址: ${value['address']}'),
+                      Text('联系方式: ${value['tel']}'),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          // 实现联系物主的逻辑
+                          // 可以在这里处理拨打电话、发送消息等操作
                         },
-                      ),
-                      CupertinoDialogAction(
-                        child: const Text('确认'),
-                        onPressed: () async {
-                          String title = value['name'];
-                          var locationData = value['location'].split(',');
-                          double l1 = double.parse(locationData[1]);
-                          double l2 = double.parse(locationData[0]);
-
-                          Uri uri = Uri.parse(
-                              '${Platform.isAndroid ? 'android' : 'ios'}amap://path?sourceApplication=applicationName&sid=&slat=$meLatitude&slon=$meLongitude&sname=&did=&dlat=$l1&dlon=$l2&dname=$title&dev=0&t=0');
-
-                          try {
-                            if (await canLaunchUrl(uri)) {
-                              await launchUrl(uri);
-                            } else {
-                              print('无法调起高德地图');
-                            }
-                          } catch (e) {
-                            print('无法调起高德地图');
-                          }
-                          Navigator.pop(context);
-                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(0xfc77be87),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        child: const Text('我要回收', style: TextStyle(fontSize: 16)),
                       ),
                     ],
-                  );
-                });
+                  ),
+                );
+              },
+            );
           },
         );
       }).toList(),
@@ -391,10 +398,22 @@ class _MapPageState extends State<MapPage> {
 
   /// 获取周边数据
   Future<void> _getPoisData() async {
-    var response = await Dio().get('https://restapi.amap.com/v3/place/around?key=${ConstConfig.webKey}&location=$markerLatitude,$markerLongitude&keywords=&types=&radius=1000&offset=20&page=1&extensions=base');
-    print(response);
+    //var response = await Dio().get('https://restapi.amap.com/v3/place/around?key=${ConstConfig.webKey}&location=$markerLatitude,$markerLongitude&keywords=&types=&radius=1000&offset=20&page=1&extensions=base');
     setState(() {
-      poisData = response.data['pois'];
+      //poisData = response.data['pois'];
+      poisData = customPoisData;
+    });
+  }
+
+  ///第一次初始化时将全部pois在地图上标出
+  Future<void> _getPoisData_init() async {
+    setState(() {
+      poisData = customPoisData;
+    });
+    poisData.forEach((poi) {
+      var xx = poi['location'].split(',');
+      var markPostion = LatLng(double.parse(xx[1]), double.parse(xx[0]));
+      _addMarker_noCameraChange(markPostion);
     });
   }
 }
