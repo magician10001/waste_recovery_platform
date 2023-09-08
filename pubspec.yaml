@@ -44,7 +44,7 @@ dependencies:
   path:
   provider:
   image_cropper:
-  dio: ^5.3.2
+  dio:
   flutter_speed_dial: ^7.0.0
   url_launcher: ^6.1.12
   socket_io_client:

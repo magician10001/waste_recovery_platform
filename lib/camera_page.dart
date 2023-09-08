@@ -1,14 +1,20 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
+import 'dart:typed_data';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'dart:convert';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
+
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/status.dart' as status;
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class TakePictureScreen extends StatefulWidget {
   final CameraDescription camera;
@@ -254,7 +260,7 @@ class DisplayPictureScreen extends StatelessWidget {
             const SizedBox(height: 16.0), // 添加一些间距
             ElevatedButton(
               onPressed: () {
-                submitImage();
+                submitImage(File(imagePath));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xfc77be87), // 背景颜色
@@ -278,13 +284,15 @@ class DisplayPictureScreen extends StatelessWidget {
     );
   }
 
-  void submitImage() {
-    final channel = IOWebSocketChannel.connect(
-        Uri.parse('ws://127.0.0.1:12345')
-    ); // 连接到服务器
-    channel.sink.add('hello');
-    channel.stream.listen((event) {
-      log(event);
-    });
+
+  Future<void> submitImage(File imgFile) async {
+    final channel = IOWebSocketChannel.connect('ws://10.15.27.120:8765');
+    try {
+      List<int> bytes = await imgFile.readAsBytes();
+      channel.sink.add(bytes);
+    } catch (e) {
+      print("Error sending image: $e");
+    }
   }
+
 }
